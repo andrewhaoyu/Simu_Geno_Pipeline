@@ -5,6 +5,7 @@ data = fread("./code/download_data/download.sh",
              header = F)
 eth = c("EUR", "AFR", "AMR", "EAS", "SAS")
 download_anvil = rep("c", nrow(data))
+temp = 1
 for(k in 1:nrow(data)){
   #check which of the five ancestries it belongs to
   index = 0
@@ -18,7 +19,11 @@ for(k in 1:nrow(data)){
                            "| gsutil cp - ",
                            "gs://fc-581f2645-31ba-4218-b41a-e734600eeec4/GenotypeData/",
                            eth[i],"/",data[k,4]," | rm ", data[k,4]))
-      download_anvil[k] = down_text
+      download_anvil[temp] = down_text
+      temp = temp + 1
+      remove_text = paste0("rm ~/Simu_Geno_Pipeline/code/download_data/",data[k,4])
+      download_anvil[temp] = remove_text
+      temp = temp + 1
       index = 1
     }
     #if not belong to genotype data, then it belongs to SnpInfor
@@ -30,7 +35,11 @@ for(k in 1:nrow(data)){
                            "| gsutil cp - ",
                            "gs://fc-581f2645-31ba-4218-b41a-e734600eeec4/SnpInfor/",
                            data[k,4]," | rm ", data[k,4]))
-      download_anvil[k] = down_text
+      download_anvil[temp] = down_text
+      temp = temp + 1
+      remove_text = paste0("rm ~/Simu_Geno_Pipeline/code/download_data/",data[k,4])
+      download_anvil[temp] = remove_text
+      temp = temp + 1
       index = 1
     }
     
