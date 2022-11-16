@@ -16,7 +16,7 @@ for(k in 1:nrow(data)){
                            data[k,3]," ",
                            data[k,4]," ",
                            "| gsutil cp - ",
-                           "gs://fc-e8cabdb2-325a-48af-9f8e-8e360431e61f/GenotypeData/",
+                           "gs://fc-581f2645-31ba-4218-b41a-e734600eeec4/GenotypeData/",
                            eth[i],"/",data[k,4]," | rm ", data[k,4]))
       download_anvil[k] = down_text
       index = 1
@@ -28,7 +28,7 @@ for(k in 1:nrow(data)){
                            data[k,3]," ",
                            data[k,4]," ",
                            "| gsutil cp - ",
-                           "gs://fc-e8cabdb2-325a-48af-9f8e-8e360431e61f/SnpInfor/",
+                           "gs://fc-581f2645-31ba-4218-b41a-e734600eeec4/SnpInfor/",
                            data[k,4]," | rm ", data[k,4]))
       download_anvil[k] = down_text
       index = 1
