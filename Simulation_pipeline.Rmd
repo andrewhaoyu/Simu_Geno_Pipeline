@@ -1,0 +1,51 @@
+---
+title: "Simulation Pipeline using HapGen2"
+output: html_document
+date: '2023-01-30'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+This document outlines a pipeline to generate large-scale, multi-ancestry genotype data using HapGen2 (Zhan et al., 2011, Bioinformatics) and the 1000 Genomes Project Phase 3 reference dataset. The reference includes data from 5 ancestral populations: African (AFR), American/Latino (AMR), East Asian (EAS), European (EUR), South Asian (SAS).
+
+## Data preparation
+[HapGen2](https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/hapgen2.html) requires specific information from the reference population: 1) Legend files, which include SNP ID, position, A0 (non-coding allele), A1 (coding allele), SNP type (e.g. Biallelic SNP), and allele frequencies. 2) A haplotype file, where each row represents a SNP and every two columns represent an individual, with 0 0 representing A0 A0, 1 0 representing A1 A0, and 1 1 representing A1 A1. 3) Map files, which have the SNP position, combined rate (cM/Mb), and genetic map (cM). The 1000 Genomes reference data was separated by ancestry, with the legend and map files remaining the same. Mono-morphic SNPs in a population result in all 0s in the haplotype data row. The processed data, including legend files, haplotype files for each ancestry, and map files, can be found on Harvard Dataverse: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DZAYXC.
+
+Biallelic SNPs with MAF over 0.01 in any of the five populations were used in the reference panel, resulting in approximately 14.8 million SNPs for AFR, 9.8 million SNPs for AMR, 7.6 million SNPs for EAS, 8.6 million SNPs for EUR, and 9.0 million SNPs for SAS. The position of these selected SNPs was saved in a tag file.
+
+##HapGen2 code
+```{r, echo=T,cache=T,warning=FALSE}
+library(data.table)
+eth <- c("AFR","AMR","EAS","EUR","SAS")
+#n represent the sample size for simulation job
+#i represent the ethnic group
+#j represent the chromosome
+#k represent the index of simulation replicate
+n = 180
+i = 4
+j = 22
+k = 1
+tag = fread(paste0("./data/tag/",eth[i],"_chr",j,".tag"),header=F)
+soft_dir = "./apps/hapgen2"
+map_file = paste0("./data/genetic_map_chr",j,"_combined_b37.txt")
+legend_file = paste0("./data/1000GP_Phase3_chr",j,".legend")
+haplotype_file = paste0("./data/",eth[i],"_","chr",j,".hap")
+tag_file = paste0("./data/tag/",eth[i],"_chr",j,".tag")
+out_file = paste0("./result/",eth[i],"/chr",j,"_",k)
+
+#this is one line code to generate an example
+#in practice, the user need to parallel the code to fullfill the purpose
+code <- paste0(soft_dir," ",
+                "-m ",map_file," ",
+                "-l ",legend_file," ",
+                "-h ",haplotype_file," ",
+                "-o ",out_file," ",
+                "-t ",tag_file," ",
+                "-n ",n," 1 -dl ",tag[1,1]," 1 1 1 -no_haps_output")
+write.table(code,file = paste0("./code_to_run.sh"),row.names = F,col.names = F,quote=F)
+#to run the code, the user can implement with the following line
+#system("sh code_to_run.sh")
+```
