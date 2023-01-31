@@ -14,9 +14,9 @@ This document outlines a pipeline to generate large-scale, multi-ancestry genoty
 ## Data preparation
 [HapGen2](https://mathgen.stats.ox.ac.uk/genetics_software/hapgen/hapgen2.html) requires specific information from the reference population: 1) Legend files, which include SNP ID, position, A0 (non-coding allele), A1 (coding allele), SNP type (e.g. Biallelic SNP), and allele frequencies. 2) A haplotype file, where each row represents a SNP and every two columns represent an individual, with 0 0 representing A0 A0, 1 0 representing A1 A0, and 1 1 representing A1 A1. 3) Map files, which have the SNP position, combined rate (cM/Mb), and genetic map (cM). The 1000 Genomes reference data was separated by ancestry, with the legend and map files remaining the same. Mono-morphic SNPs in a population result in all 0s in the haplotype data row. The processed data, including legend files, haplotype files for each ancestry, and map files, can be found on Harvard Dataverse: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DZAYXC.
 
-Biallelic SNPs with MAF over 0.01 in any of the five populations were used in the reference panel, resulting in approximately 14.8 million SNPs for AFR, 9.8 million SNPs for AMR, 7.6 million SNPs for EAS, 8.6 million SNPs for EUR, and 9.0 million SNPs for SAS. The position of these selected SNPs was saved in a tag file.
+Biallelic SNPs with MAF over 0.01 in any of the five populations were used in the reference panel, resulting in approximately 14.8 million SNPs for AFR, 9.8 million SNPs for AMR, 7.6 million SNPs for EAS, 8.6 million SNPs for EUR, and 9.0 million SNPs for SAS. The position of these selected SNPs was saved in a tag file. Although HapGen2 also has the -t flag to subset genetic variant. However, the -t flag is very slow when then number of tag variants are relatively large. Therefore, I will do the post-data processing using R. Meanwhile, HapGen2 requires the disease loci to separate the case and controls. For our purpose, we only need the sample of controls. In practice, I will use the first loci as the disease loci, and then simulate n controls and 0 cases. 
 
-##HapGen2 code
+## HapGen2 code
 ```{r, echo=T,cache=T,warning=FALSE}
 library(data.table)
 eth <- c("AFR","AMR","EAS","EUR","SAS")
@@ -24,7 +24,7 @@ eth <- c("AFR","AMR","EAS","EUR","SAS")
 #i represent the ethnic group
 #j represent the chromosome
 #k represent the index of simulation replicate
-n = 180
+n = 100
 i = 4
 j = 22
 k = 1
@@ -38,14 +38,21 @@ out_file = paste0("./result/",eth[i],"/chr",j,"_",k)
 
 #this is one line code to generate an example
 #in practice, the user need to parallel the code to fullfill the purpose
+#HapGen2 require the disease loci to separate the case and control samples
 code <- paste0(soft_dir," ",
                 "-m ",map_file," ",
                 "-l ",legend_file," ",
                 "-h ",haplotype_file," ",
                 "-o ",out_file," ",
-                "-t ",tag_file," ",
-                "-n ",n," 1 -dl ",tag[1,1]," 1 1 1 -no_haps_output")
+                #"-t ",tag_file," ",                
+                "-dl ", tag[1]," 1 1 1 ",
+                "-n ",n," 0 -no_haps_output")
 write.table(code,file = paste0("./code_to_run.sh"),row.names = F,col.names = F,quote=F)
 #to run the code, the user can implement with the following line
 #system("sh code_to_run.sh")
+
 ```
+The output of code_to_run.sh include .controls.gen, .cases.gen, .controls.sample, cases.sample. We only need the file .controls.gen for the next step.
+
+## Merge simulation subsets and subsetting to tagging SNPs.
+Need further discussion with Yunfeng.
