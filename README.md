@@ -1,4 +1,4 @@
-Simu_Geno_Pipeline
+Simulation Pipeline using HapGen2 with 1000 Genomes Data as reference
 =======
 This repo outlines a pipeline to generate large-scale, multi-ancestry genotype data using HapGen2 (Zhan et al., 2011, Bioinformatics) and the 1000 Genomes Project Phase 3 reference dataset. The reference includes data from 5 ancestral populations: African (AFR), American/Latino (AMR), East Asian (EAS), European (EUR), South Asian (SAS).
 
