@@ -12,7 +12,7 @@ j = as.numeric(args[[2]])
 eth_vec = c("EUR", "AFR", "AMR", "EAS", "SAS")
 # for(i in 1:5){
 #   for(j in 1:22){
-    system(paste0("cd /data/zhangh24/KG.impute2/",eth[i],"; cp chr",j,".hap /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i]))
+    system(paste0("cd /data/zhangh24/KG.impute2/",eth_vec[i],"; cp chr",j,".hap /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i]))
 #   }
 # }
 # for(i in 1:5){
