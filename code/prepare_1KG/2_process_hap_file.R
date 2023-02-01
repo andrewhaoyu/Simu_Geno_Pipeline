@@ -16,6 +16,11 @@ args <- commandArgs(trailingOnly = T)
 i = as.numeric(args[[1]])
 j = as.numeric(args[[2]])
 eth_vec = c("EUR", "AFR", "AMR", "EAS", "SAS")
+system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i],"/; unzip ",eth_vec[i],"_chr",j,".hap.zip"))
+system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i],"/; rm ",eth_vec[i],"_chr",j,".hap.zip"))
+system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i],"/; mv chr",j,".hap ",eth_vec[i],"_chr",j,".hap"))
+system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i],"/; zip ",eth_vec[i],"_chr",j,".hap ",eth_vec[i],"_chr",j,".hap.zip"))
+
 # for(i in 1:5){
 #   for(j in 1:22){
     #system(paste0("cd /data/zhangh24/KG.impute2/",eth_vec[i],"; cp chr",j,".hap /data/zhangh24/Simu_Geno_Pipeline/result/hap/",eth_vec[i]))
@@ -31,11 +36,20 @@ eth_vec = c("EUR", "AFR", "AMR", "EAS", "SAS")
   #  system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/hap/", eth_vec[i], "; rm chr",j,".hap"))
 #   }
 # }
-    system(paste0("cd /data/zhangh24/KG.impute2/tag/; cp ",eth_vec[i],"_chr",j,".tag /data/zhangh24/Simu_Geno_Pipeline/result/tag/",eth_vec[i]))
-    system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/tag/", eth_vec[i], "; zip ",eth_vec[i],"_chr",j,".tag.zip ",eth_vec[i],"_chr",j,".tag"))
-    system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/tag/", eth_vec[i], "; rm ",eth_vec[i],"_chr",j,".tag" ))
-    
-    
+    # system(paste0("cd /data/zhangh24/KG.impute2/tag/; cp ",eth_vec[i],"_chr",j,".tag /data/zhangh24/Simu_Geno_Pipeline/result/tag/",eth_vec[i]))
+    # system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/tag/", eth_vec[i], "; zip ",eth_vec[i],"_chr",j,".tag.zip ",eth_vec[i],"_chr",j,".tag"))
+    # system(paste0("cd /data/zhangh24/Simu_Geno_Pipeline/result/tag/", eth_vec[i], "; rm ",eth_vec[i],"_chr",j,".tag" ))
+    # 
+# eth_vec = c("EUR", "AFR", "AMR", "EAS", "SAS")
+#         for(i in 1:5){
+#           for(j in 1:22){
+#             print(c(i,j))
+#             system(paste0("cd /Users/zhangh24/Desktop/1000_Genome_Data/hap/",eth_vec[i],"/; unzip ",eth_vec[i],"_chr",j,".hap.zip"))
+#             system(paste0("cd /Users/zhangh24/Desktop/1000_Genome_Data/hap/",eth_vec[i],"/; rm ",eth_vec[i],"_chr",j,".hap.zip"))
+#             system(paste0("cd /Users/zhangh24/Desktop/1000_Genome_Data/hap/",eth_vec[i],"/; mv chr",j,".hap ",eth_vec[i],"_chr",j,".hap"))
+#             system(paste0("cd /Users/zhangh24/Desktop/1000_Genome_Data/hap/",eth_vec[i],"/; zip ",eth_vec[i],"_chr",j,".hap ",eth_vec[i],"_chr",j,".hap.zip"))
+#           }
+#         }
     # 
     # 
     # 
