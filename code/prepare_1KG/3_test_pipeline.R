@@ -1,0 +1,1 @@
+#goal: test the simulation pipeline with by subseting the snplist to mega+hm3

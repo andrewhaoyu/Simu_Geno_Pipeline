@@ -59,7 +59,7 @@ h2_ldscore = rep(0,n_rep)
 for(k in 1:n_rep){
   if(k%%10==0)print(k)
   beta = rnorm(p, mean = 0, sd = sqrt(h2/p))
-  error = rnorm(p, mean = 0, sd = sqrt(1-h2))
+  error = rnorm(n, mean = 0, sd = sqrt(1-h2))
   y = genotype_data%*%beta+error
   
   

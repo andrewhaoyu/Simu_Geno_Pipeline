@@ -435,9 +435,58 @@ write.table(code,file = paste0(&quot;./code_to_run.sh&quot;),row.names = F,col.n
 .controls.sample, cases.sample. We only need the file .controls.gen for
 the next step.</p>
 </div>
-<div id="merge-simulation-subsets-and-subsetting-to-tagging-snps." class="section level2">
-<h2>Merge simulation subsets and subsetting to tagging SNPs.</h2>
-<p>Need further discussion with Yunfeng.</p>
+<div id="subsetting-snps-to-megahapmap3-list" class="section level2">
+<h2>Subsetting SNPs to Mega+HapMap3 list</h2>
+<p>Performing simulations using 19 million SNPs can be computationally
+intensive. However, we can reduce the computational burden by subsetting
+the SNP list to a smaller set, especially when the research project
+focuses on a specific subset of SNPs. For instance, in the present
+example, we utilize a subset of SNPs from the Multi-Ethnic Genotyping
+Arrays (MEGA) and HapMap3 (HM3).</p>
+<pre class="r"><code>library(data.table)
+library(dplyr)
+eth &lt;- c(&quot;AFR&quot;,&quot;AMR&quot;,&quot;EAS&quot;,&quot;EUR&quot;,&quot;SAS&quot;)
+#n represent the sample size for simulation job
+#i represent the ethnic group
+#j represent the chromosome
+#k represent the index of simulation replicate
+n = 100
+i = 4
+j = 22
+k = 1
+# tag = fread(paste0(&quot;./data/tag/&quot;,eth[i],&quot;_chr&quot;,j,&quot;.tag&quot;),header=F)
+# soft_dir = &quot;./apps/hapgen2&quot;
+legend = fread(paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;.legend&quot;))
+haplotype = fread(paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;.hap&quot;))
+mega_hm_list = fread(paste0(&quot;./data/snp_infor_mega+hm3&quot;)) %&gt;% 
+  filter(CHR==j) %&gt;% select(SNP)
+idx = which(legend$id%in%mega_hm_list$SNP)
+legend_sub = legend[idx,]
+haplotype_sub = haplotype[idx,]
+write.table(legend_sub,file =  paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;_sub.legend&quot;),row.names = F,col.names = T,quote=F)
+write.table(haplotype_sub,file =  paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;_sub.hap&quot;),row.names = F,col.names = T,quote=F)
+
+soft_dir = &quot;./apps/hapgen2&quot;
+map_file = paste0(&quot;./data/genetic_map_chr&quot;,j,&quot;_combined_b37.txt&quot;)
+legend_file =paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;_sub.legend&quot;)
+haplotype_file = paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;_sub.hap&quot;)
+out_file = paste0(&quot;./result/&quot;,eth[i],&quot;/chr&quot;,j,&quot;_&quot;,k)
+
+#this is one line code to generate an example
+#in practice, the user need to parallel the code to fullfill the purpose
+#HapGen2 require the disease loci to separate the case and control samples
+code &lt;- paste0(soft_dir,&quot; &quot;,
+                &quot;-m &quot;,map_file,&quot; &quot;,
+                &quot;-l &quot;,legend_file,&quot; &quot;,
+                &quot;-h &quot;,haplotype_file,&quot; &quot;,
+                &quot;-o &quot;,out_file,&quot; &quot;,
+                #&quot;-t &quot;,tag_file,&quot; &quot;,                
+                &quot;-dl &quot;, legend_sub$id[1],&quot; 1 1 1 &quot;,
+                &quot;-n &quot;,n,&quot; 0 -no_haps_output&quot;)
+write.table(code,file = paste0(&quot;./code_to_run.sh&quot;),row.names = F,col.names = F,quote=F)
+
+#to run the code, the user can implement with the following line
+#system(&quot;sh code_to_run.sh&quot;)</code></pre>
 </div>
 
 
