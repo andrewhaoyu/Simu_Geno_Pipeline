@@ -8,11 +8,19 @@ ar1_cor <- function(n, rho) {
 }
 library(MASS)
 library(mvtnorm)
-p = 100
-n = 1000
-rho = 0.8
-sigma = ar1_cor(p,rho)
+library(Matrix)
+#block diag (200), AR(1)
+n_block = 200
+p = 10000
+p_sub = p/n_block
+rho = 0.95
+sigma_list = list()
+for(k in 1:n_block){
+  sigma_list[[k]] = ar1_cor(p_sub,rho)
+}
+sigma = bdiag(sigma_list)
 
+n = 5000
 sample = mvrnorm(n = n,
                  mu = rep(0,p),
                  Sigma = sigma)
@@ -21,7 +29,7 @@ genotype_data = matrix(sample,
                        p)
 GRM = genotype_data%*%t(genotype_data)
 
-n_rep = 10
+n_rep = 2
 h2 = 0.4
 GWAS = function(y,genotype_data){
   p = ncol(genotype_data)
