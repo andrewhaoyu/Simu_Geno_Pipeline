@@ -450,7 +450,7 @@ eth &lt;- c(&quot;AFR&quot;,&quot;AMR&quot;,&quot;EAS&quot;,&quot;EUR&quot;,&quo
 #i represent the ethnic group
 #j represent the chromosome
 #k represent the index of simulation replicate
-n = 100
+n = 10
 i = 4
 j = 22
 k = 1
@@ -458,11 +458,14 @@ k = 1
 # soft_dir = &quot;./apps/hapgen2&quot;
 legend = fread(paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;.legend&quot;))
 haplotype = fread(paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;.hap&quot;))
+tag = fread(paste0(&quot;./data/tag/&quot;,eth[i],&quot;_chr&quot;,j,&quot;.tag&quot;))
 mega_hm_list = fread(paste0(&quot;./data/snp_infor_mega+hm3&quot;)) %&gt;% 
   filter(CHR==j) %&gt;% select(SNP)
 idx = which(legend$id%in%mega_hm_list$SNP)
 legend_sub = legend[idx,]
 haplotype_sub = haplotype[idx,]
+tag_idx = which(tag$V1%in%legend_sub$position)
+tag_sub = tag[tag_idx,drop = F]
 write.table(legend_sub,file =  paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;_sub.legend&quot;),row.names = F,col.names = T,quote=F)
 write.table(haplotype_sub,file =  paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;_sub.hap&quot;),row.names = F,col.names = T,quote=F)
 
@@ -481,7 +484,7 @@ code &lt;- paste0(soft_dir,&quot; &quot;,
                 &quot;-h &quot;,haplotype_file,&quot; &quot;,
                 &quot;-o &quot;,out_file,&quot; &quot;,
                 #&quot;-t &quot;,tag_file,&quot; &quot;,                
-                &quot;-dl &quot;, legend_sub$id[1],&quot; 1 1 1 &quot;,
+                &quot;-dl &quot;, tag_sub[1],&quot; 1 1 1 &quot;,
                 &quot;-n &quot;,n,&quot; 0 -no_haps_output&quot;)
 write.table(code,file = paste0(&quot;./code_to_run.sh&quot;),row.names = F,col.names = F,quote=F)
 

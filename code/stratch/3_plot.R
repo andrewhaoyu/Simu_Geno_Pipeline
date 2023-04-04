@@ -1,3 +1,6 @@
 load("./result/herit/h2_estimate")
-plot(result[,1],
-     result[,2])
+library(ggplot2)
+ggplot(result, aes(x = h2_reml, y = h2_ldscore))+
+  geom_point()+
+  theme_Publication()+
+  geom_smooth(method = "lm")
