@@ -467,7 +467,7 @@ haplotype_sub = haplotype[idx,]
 tag_idx = which(tag$V1%in%legend_sub$position)
 tag_sub = tag[tag_idx,drop = F]
 write.table(legend_sub,file =  paste0(&quot;./data/1000GP_Phase3_chr&quot;,j,&quot;_sub.legend&quot;),row.names = F,col.names = T,quote=F)
-write.table(haplotype_sub,file =  paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;_sub.hap&quot;),row.names = F,col.names = T,quote=F)
+write.table(haplotype_sub,file =  paste0(&quot;./data/&quot;,eth[i],&quot;_&quot;,&quot;chr&quot;,j,&quot;_sub.hap&quot;),row.names = F,col.names = F,quote=F)
 
 soft_dir = &quot;./apps/hapgen2&quot;
 map_file = paste0(&quot;./data/genetic_map_chr&quot;,j,&quot;_combined_b37.txt&quot;)
